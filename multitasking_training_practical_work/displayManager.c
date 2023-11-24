@@ -30,6 +30,7 @@ void displayManagerJoin(void){
 
 static void *display( void *parameters )
 {
+	MSG_BLOCK msg
 	D(printf("[displayManager]Thread created for display with id %d\n", gettid()));
 	unsigned int diffCount = 0;
 	while(diffCount < DISPLAY_LOOP_LIMIT){

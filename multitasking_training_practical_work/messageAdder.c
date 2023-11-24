@@ -30,13 +30,13 @@ static void *sum( void *parameters );
 
 MSG_BLOCK getCurrentSum(){
 	//TODO
-	return out
+	return out;
 
 }
 
 unsigned int getConsumedCount(){
 	//TODO
-	return consumeCount
+	return consumeCount;
 }
 
 
@@ -59,6 +59,7 @@ static void *sum( void *parameters )
 {
 	D(printf("[messageAdder]Thread created for sum with id %d\n", gettid()));
 	unsigned int i = 0;
+	MSG_BLOCK msg;
 	while(i<ADDER_LOOP_LIMIT){
 		i++;
 		sleep(ADDER_SLEEP_TIME);
