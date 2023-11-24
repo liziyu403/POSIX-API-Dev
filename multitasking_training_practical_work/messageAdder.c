@@ -30,10 +30,13 @@ static void *sum( void *parameters );
 
 MSG_BLOCK getCurrentSum(){
 	//TODO
+	return out
+
 }
 
 unsigned int getConsumedCount(){
 	//TODO
+	return consumeCount
 }
 
 
@@ -44,10 +47,12 @@ void messageAdderInit(void){
 		out.mData[i] = 0;
 	}
 	//TODO
+	pthread_create(&consumer, NULL, sum, NULL);
 }
 
 void messageAdderJoin(void){
 	//TODO
+	pthread_join(consumer, NULL);
 }
 
 static void *sum( void *parameters )
@@ -58,9 +63,12 @@ static void *sum( void *parameters )
 		i++;
 		sleep(ADDER_SLEEP_TIME);
 		//TODO
+		msg = getMessage();
+		messageAdd(&out, &msg); // void messageAdd(volatile MSG_BLOCK* src, volatile MSG_BLOCK* add)
 	}
 	printf("[messageAdder] %d termination\n", gettid());
 	//TODO
+	pthread_exit(NULL);
 }
 
 
