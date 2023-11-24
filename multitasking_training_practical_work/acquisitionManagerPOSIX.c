@@ -69,14 +69,14 @@ static unsigned int createSynchronizationObjects(void)
 	// initialization of table
 	for(int i=0; i<BUFFER_SIZE; i++)
     {
-    	tabIndiceOcc[i]=i;
-    	tabIndiceLib[i]=i;
+    	Table_IndiceLib[i]=i;
+    	Table_IndicePlan[i]=i;
     }
 	// initialization of semaphore
-    semaphore_Libre = sem_open(SEM_NAME5, O_CREAT, 0644, BUFFER_SIZE);
-    semaphore_Occ = sem_open(SEM_NAME6, O_CREAT, 0644, 0);
+    semaphore_Libre = sem_open(SEM_NAME1, O_CREAT, 0644, BUFFER_SIZE);
+    semaphore_Occ = sem_open(SEM_NAME2, O_CREAT, 0644, 0);
     
-    if (((semaphore1 == SEM_FAILED) || (semaphore2 == SEM_FAILED)) || ((semaphore3 == SEM_FAILED)) || ((semaphore4 == SEM_FAILED)) || ((semaphore_Libre == SEM_FAILED) || (semaphore_Occ == SEM_FAILED))) 
+    if ((semaphore_Libre == SEM_FAILED) || (semaphore_Occ == SEM_FAILED) ) 
     {
         perror("[sem_open]");
     	return ERROR_INIT;
@@ -165,16 +165,17 @@ void *produce(void* params)
 	D(printf("[acquisitionManager]Producer created with id %d\n", gettid()));
 	unsigned int i = 0;
 	int i_index; // index for buffer
+	MSG_BLOCK X;
 	while (i < PRODUCER_LOOP_LIMIT)
 	{
 		i++;
 		sleep(PRODUCER_SLEEP_TIME+(rand() % 5));
 		//TODO
 		sem_wait(semaphore_Libre); 
-			if(messageCheck(&temp)==1) // check pass
+			if(messageCheck(&X)==1) // check pass
 			{		
 				pthread_mutex_lock(&m1);
-					i_index = tabIndiceLib[i_Libre];
+					i_index = Table_IndiceLib[i_Libre];
 					i_Libre = ((i_Libre + 1)%BUFFER_SIZE);
 				pthread_mutex_unlock(&m1);
 				getInput(i,&X);
