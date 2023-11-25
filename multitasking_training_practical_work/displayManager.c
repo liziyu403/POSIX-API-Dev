@@ -38,7 +38,15 @@ static void *display( void *parameters )
 		//TODO - check
 		msg = getCurrentSum(); // 调用 iMessagerAdder 接口
 		messageDisplay(&msg); // 调用 iDisplay 接口
-		diffCount = ((getProducedCount() - getConsumedCount()) <= 0) & DISPLAY_LOOP_LIMIT; // 防止消费大于生产产生错误，小于0是为了防止越界问题
+		/**
+		if ((getProducedCount() - getConsumedCount()) <= 0)
+		{
+			diffCount = DISPLAY_LOOP_LIMIT; 
+		}**/
+		diffCount = (DISPLAY_LOOP_LIMIT & -(getProducedCount() - getConsumedCount() <= 0)) | (diffCount & ~(DISPLAY_LOOP_LIMIT & -(getProducedCount() - getConsumedCount() <= 0)));
+
+		//printf("%d",diffCount);
+
 		print(getProducedCount(), getConsumedCount()); // 按要求打印
 	}
 	printf("[displayManager] %d termination\n", gettid());

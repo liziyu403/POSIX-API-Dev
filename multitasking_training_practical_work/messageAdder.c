@@ -39,7 +39,6 @@ unsigned int getConsumedCount(){
 	return consumeCount;
 }
 
-
 void messageAdderInit(void){
 	out.checksum = 0;
 	for (size_t i = 0; i < DATA_SIZE; i++)
@@ -66,6 +65,7 @@ static void *sum( void *parameters )
 		//TODO
 		msg = getMessage();
 		messageAdd(&out, &msg); // void messageAdd(volatile MSG_BLOCK* src, volatile MSG_BLOCK* add)
+		consumeCount++;
 	}
 	printf("[messageAdder] %d termination\n", gettid());
 	//TODO
