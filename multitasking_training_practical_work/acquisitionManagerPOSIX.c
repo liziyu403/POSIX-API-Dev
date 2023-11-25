@@ -39,7 +39,6 @@ static void *produce(void *params);
 * Semaphores and Mutex
 */
 //TODO
-// Mutex for produce counting operation
 // atomic write mutex
 pthread_mutex_t m1 = PTHREAD_MUTEX_INITIALIZER; 
 pthread_mutex_t m2 = PTHREAD_MUTEX_INITIALIZER;  
@@ -117,6 +116,7 @@ MSG_BLOCK getMessage(void){
 			Table_IndiceLib[j_Libre] = j_index;
 			j_Libre = ((j_Libre + 1)%BUFFER_SIZE);
 		pthread_mutex_unlock(&m4);
+		
 	sem_post(semaphore_Libre); 
 	
 	return *X;
@@ -171,12 +171,13 @@ void *produce(void* params)
 		sleep(PRODUCER_SLEEP_TIME+(rand() % 5));
 		//TODO
 		sem_wait(semaphore_Libre); 
-			if(messageCheck(&X)==1) // check pass
+			if(messageCheck(&X)) // check pass
 			{		
 				pthread_mutex_lock(&m1);
 					i_index = Table_IndiceLib[i_Libre];
 					i_Libre = ((i_Libre + 1)%BUFFER_SIZE);
 				pthread_mutex_unlock(&m1);
+
 				getInput(i,&X);
 				dataBuffer[i_index] = &X; 
 				incrementProducedCount(); // produce ++
