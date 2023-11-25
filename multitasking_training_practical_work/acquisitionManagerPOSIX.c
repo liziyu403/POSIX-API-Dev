@@ -1,4 +1,4 @@
-#define BUFFER_SIZE 4
+#define BUFFER_SIZE 10
 #define ERROR_INIT 1
 #define ERROR_SUCCESS 0
 #define SEMAPHORE_INITIAL_VALUE 1
@@ -104,8 +104,8 @@ MSG_BLOCK getMessage(void){
 	//TODO
 	int j_index;
 	MSG_BLOCK* X;
-	
-	sem_wait(semaphore_Occ); 
+	sem_wait(semaphore_Occ);
+
 		pthread_mutex_lock(&m3);
 			j_index = Table_IndicePlan[j_Plan];
 			j_Plan = ((j_Plan + 1)%BUFFER_SIZE);
@@ -117,7 +117,6 @@ MSG_BLOCK getMessage(void){
 			Table_IndiceLib[j_Libre] = j_index;
 			j_Libre = ((j_Libre + 1)%BUFFER_SIZE);
 		pthread_mutex_unlock(&m4);
-
 	sem_post(semaphore_Libre); 
 	
 	return *X;
@@ -187,7 +186,7 @@ void *produce(void* params)
 					i_Plan = ((i_Plan + 1)%BUFFER_SIZE);
 				pthread_mutex_unlock(&m2);
 			}
-        sem_post(semaphore_Occ); 	
+       		 sem_post(semaphore_Occ); 	
 	}
 	printf("[acquisitionManager] %d termination\n", gettid());
 	//TODO
