@@ -10,12 +10,18 @@
 #include "iAcquisitionManager.h"
 #include "debug.h"
 
+// muutex
+pthread_mutex_t consumeCountMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t outMutex = PTHREAD_MUTEX_INITIALIZER;
+
 //consumer thread
 pthread_t consumer;
 //Message computed
 volatile MSG_BLOCK out;
 //Consumer count storage
 volatile unsigned int consumeCount = 0;
+unsigned int consume_tmp;
+MSG_BLOCK block_tmp;
 
 /**
  * Increments the consume count.
@@ -27,16 +33,27 @@ static void incrementConsumeCount(void);
  */
 static void *sum( void *parameters );
 
+static void incrementConsumeCount(void) {
+    pthread_mutex_lock(&consumeCountMutex);
+    consumeCount++;
+    pthread_mutex_unlock(&consumeCountMutex);
+}
 
 MSG_BLOCK getCurrentSum(){
 	//TODO
-	return out;
+	pthread_mutex_lock(&outMutex);
+	block_tmp = out;
+	pthread_mutex_unlock(&outMutex);
+	return block_tmp;
 
 }
 
 unsigned int getConsumedCount(){
 	//TODO
-	return consumeCount;
+	pthread_mutex_lock(&consumeCountMutex);
+	consume_tmp = consumeCount;
+	pthread_mutex_unlock(&consumeCountMutex);
+	return consume_tmp;
 }
 
 void messageAdderInit(void){
@@ -63,9 +80,12 @@ static void *sum( void *parameters )
 		i++;
 		sleep(ADDER_SLEEP_TIME);
 		//TODO
+		pthread_mutex_lock(&outMutex);
 		msg = getMessage();
 		messageAdd(&out, &msg); // void messageAdd(volatile MSG_BLOCK* src, volatile MSG_BLOCK* add)
-		consumeCount++;
+		incrementConsumeCount();
+		// consumeCount++;
+		pthread_mutex_unlock(&outMutex);
 	}
 	printf("[messageAdder] %d termination\n", gettid());
 	//TODO
