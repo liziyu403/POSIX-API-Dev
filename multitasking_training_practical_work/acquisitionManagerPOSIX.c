@@ -187,7 +187,7 @@ void *produce(void* params)
 				pthread_mutex_unlock(&m1);
 
 				getInput(i,&X);
-				dataBuffer[i_index] = &X; 
+				dataBuffer[i_index] = X; 
 				incrementProducedCount(); // produce ++
 				
 				pthread_mutex_lock(&m2);

@@ -82,9 +82,8 @@ static void *sum( void *parameters )
 		//TODO
 		pthread_mutex_lock(&outMutex);
 		msg = getMessage();
-		messageAdd(&out, &msg); // void messageAdd(volatile MSG_BLOCK* src, volatile MSG_BLOCK* add)
+		messageAdd(&out, &msg); 
 		incrementConsumeCount();
-		
 		// consumeCount++;
 		pthread_mutex_unlock(&outMutex);
 	}
