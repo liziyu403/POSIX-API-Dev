@@ -45,6 +45,9 @@ pthread_mutex_t m2 = PTHREAD_MUTEX_INITIALIZER;
 // atomic read mutex
 pthread_mutex_t m3 = PTHREAD_MUTEX_INITIALIZER;  
 pthread_mutex_t m4 = PTHREAD_MUTEX_INITIALIZER;  
+// mutex
+pthread_mutex_t produceCountMutex = PTHREAD_MUTEX_INITIALIZER;
+
 
 // global semaphre
 sem_t *semaphore_Libre; // Sem Libre
@@ -88,14 +91,19 @@ static unsigned int createSynchronizationObjects(void)
 static void incrementProducedCount(void)
 {
 	//TODO
+	pthread_mutex_lock(&produceCountMutex);
 	produceCount++; 
+	pthread_mutex_unlock(&produceCountMutex);
 }
 
 unsigned int getProducedCount(void)
 {
 	unsigned int p = 0;
 	//TODO
+	pthread_mutex_lock(&produceCountMutex);
 	p = produceCount; 
+	pthread_mutex_unlock(&produceCountMutex);
+	
 	return p;
 }
 
