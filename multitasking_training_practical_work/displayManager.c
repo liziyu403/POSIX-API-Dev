@@ -12,6 +12,9 @@
 // DisplayManager thread.
 pthread_t displayThread;
 
+pthread_mutex_t displayer = PTHREAD_MUTEX_INITIALIZER;
+
+
 /**
  * Display manager entry point.
  * */
@@ -36,8 +39,10 @@ static void *display( void *parameters )
 	while(diffCount < DISPLAY_LOOP_LIMIT){
 		sleep(DISPLAY_SLEEP_TIME);
 		//TODO - check
+		pthread_mutex_lock(&displayer);
 		msg = getCurrentSum(); // 调用 iMessagerAdder 接口
 		messageDisplay(&msg); // 调用 iDisplay 接口
+		pthread_mutex_unlock(&displayer);
 		/**
 		if ((getProducedCount() - getConsumedCount()) <= 0)
 		{
